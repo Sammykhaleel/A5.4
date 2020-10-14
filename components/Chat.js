@@ -1,36 +1,36 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 //import relevant components from react native
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { StyleSheet, Text, View, Platform } from "react-native";
+import { GiftedChat } from "react-native-gifted-chat";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 // create Screen2 (Chat) class
 //import firebase
-const firebase = require('firebase');
-require('firebase/firestore');
+const firebase = require("firebase");
+require("firebase/firestore");
 
 // create Screen2 (Chat) class
 export default class Chat extends Component {
-
   constructor() {
     super();
 
     if (!firebase.apps.length) {
       firebase.initializeApp({
-        apiKey: "AIzaSyA5LJNBLFMVgZTWvfH73fqRaiFLwCOjWmM",
-        authDomain: "test-d614c.firebaseapp.com",
-        databaseURL: "https://test-d614c.firebaseio.com",
-        projectId: "test-d614c",
-        storageBucket: "test-d614c.appspot.com",
-        messagingSenderId: "799483602316",
-        appId: "1:799483602316:web:0eaaf90d0b214244b822a9",
+        apiKey: "AIzaSyCVSLGXX7Te3NAPhG-jYbUe-8UPxNUeexM",
+        authDomain: "chatapp-b6157.firebaseapp.com",
+        databaseURL: "https://chatapp-b6157.firebaseio.com",
+        projectId: "chatapp-b6157",
+        storageBucket: "chatapp-b6157.appspot.com",
+        messagingSenderId: "828054549169",
+        appId: "1:828054549169:web:85233346327d0c638aa890",
+        measurementId: "G-2Q62Y91C7E",
       });
     }
 
-    this.referenceChatMessages = firebase.firestore().collection('messages');
+    this.referenceChatMessages = firebase.firestore().collection("messages");
 
     this.state = {
       messages: [],
-      uid: 0
+      uid: 0,
     };
   }
 
@@ -42,16 +42,18 @@ export default class Chat extends Component {
 
       this.setState({
         uid: user.uid,
-        messages: []
+        messages: [],
       });
 
-      this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy("createdAt", "desc")
+        .onSnapshot(this.onCollectionUpdate);
     });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-  };
+  }
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
@@ -63,7 +65,7 @@ export default class Chat extends Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user
+        user: data.user,
       });
     });
 
@@ -78,7 +80,7 @@ export default class Chat extends Component {
       _id: message._id,
       text: message.text,
       createdAt: message.createdAt,
-      user: message.user
+      user: message.user,
     });
   }
   //define title in navigation bar
@@ -90,31 +92,37 @@ export default class Chat extends Component {
 
   //appending new message to messages object
   onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }), () => {
-      this.addMessage();
-    });
+    this.setState(
+      (previousState) => ({
+        messages: GiftedChat.append(previousState.messages, messages),
+      }),
+      () => {
+        this.addMessage();
+      }
+    );
   }
 
   //render components
   render() {
     return (
       //fullscreen component
-      <View style={{ flex:1, backgroundColor: this.props.navigation.state.params.backgroundColor }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.props.navigation.state.params.backgroundColor,
+        }}
+      >
         <GiftedChat
           messages={this.state.messages}
-          onSend={messages => this.onSend(messages)}
+          onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: this.state.uid
+            _id: this.state.uid,
           }}
         />
-        {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
+        {Platform.OS === "android" ? <KeyboardSpacer /> : null}
       </View>
     );
   }
-};
+}
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});
